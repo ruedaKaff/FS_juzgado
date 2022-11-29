@@ -1,6 +1,6 @@
 import { Router } from "express";
 const prueba = Router();
-import { findOne } from "./prueba.service.js";
+import { findOne, create } from "./prueba.service.js";
 
 prueba.use((req, res, next) => {
   next();
@@ -10,9 +10,9 @@ prueba.use((req, res, next) => {
  */
 prueba.get("/:id", findOne);
 
-/* prueba.post("/", create);
+prueba.post("/", create);
 
-prueba.put("/:id", update);
+/* prueba.put("/:id", update);
 
 prueba.delete("/:id_prueba", remove);
  */

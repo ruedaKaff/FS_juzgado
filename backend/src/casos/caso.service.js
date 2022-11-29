@@ -5,7 +5,7 @@ const find = (req, res = response) => {
 
 connection.query (
     `
-    SELECT caso.nombre_caso, caso.fecha, caso.veredicto, juez.nombre_juez, acusado.nombre_acusado, acusado.foto_acusado
+    SELECT caso.id_caso,caso.nombre_caso, caso.fecha, caso.veredicto, juez.nombre_juez, acusado.nombre_acusado, acusado.foto_acusado
     FROM caso
     INNER JOIN juez ON caso.id_juez = juez.id_juez
     JOIN acusado ON caso.id_acusado = acusado.id_acusado;
