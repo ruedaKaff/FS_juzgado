@@ -1,12 +1,15 @@
-import {getJueces, getCasos, getSospechosos, getJuzgados,getPruebas} from "./Api.js";
+import {getJueces, getCasos, getSospechosos, getJuzgados,getPruebas,nuevaPrueba} from "./Api.js";
 
-
+let myCase="";
 document.addEventListener("DOMContentLoaded", () => {
     /* ALL GETS */
+
     renderingCasos();
     renderingJueces();
     renderingSospechosos();
     renderingJuzgados();
+    renderingPruebas();
+    
   });
   /* ALL GETS */
 async function renderingCasos() {
@@ -15,7 +18,7 @@ async function renderingCasos() {
       let html = "";
   
       cases.forEach((juzgadoCaso) => {
-        const { foto_acusado,nombre_caso , nombre_juez, fecha } = juzgadoCaso;
+        const { foto_acusado,nombre_caso , nombre_juez, fecha, id_caso } = juzgadoCaso;
         html += `
         <div class="card">
           <img src="${foto_acusado}" style="height: 280px;"; class="card-img-top" alt="..." />
@@ -27,14 +30,54 @@ async function renderingCasos() {
                   <p class="card-text">
                       ${fecha}
                   </p>
-                  
-                  <a href="#" class="btn btn-primary">Detalle</a>
+                  <form action="fullCaso.html" method="GET">
+                  <button type="submit"  class="btn btn-primary boton" value="${id_caso}">Ver pruebas</button>
+                  </form>
           </div>
         </div>
           `;
           casos.innerHTML = html;
       });
     }
+
+document.addEventListener("click", getCasoss);
+    async function getCasoss (e){
+      let htmlmodal= "";    // FOR EACH TO PAINT HTML WITH CAMPOS FROM STUDENTS
+      if (e.target.classList.contains("add")) {
+        const caso = await getCasos();
+        console.log(caso);
+        const casosOption = document.querySelector("#caso");
+        caso.forEach((fields) => {
+        const { nombre_caso, id_caso } = fields;
+        htmlmodal += ` 
+        <option value="${id_caso}">${nombre_caso}</option>
+        ` ;
+      });
+      casosOption.innerHTML = htmlmodal;
+        
+      }
+    }
+const caso = document.querySelector("#casos");
+
+caso.addEventListener('click', selectedCase)
+function selectedCase (e)
+{
+  if(e.target.classList.contains("boton"))
+  {
+    const selectedCase = e.target.parentElement.parentElement;
+  console.log(selectedCase);
+  cases(selectedCase);
+  }
+}
+function cases (selected)
+{
+  const caseDetail = {
+    id: selected.querySelector("button").getAttribute("id")
+  }
+  myCase = caseDetail.id;
+  console.log(myCase);
+
+}
 async function renderingJueces() {
       const juez = await getJueces();
       const jueces = document.querySelector("#jueces");
@@ -113,37 +156,49 @@ async function renderingJuzgados() {
           juzgados.innerHTML = html;
       });
     }
-
-const formulario = document.querySelector("#formulario");
-formulario.addEventListener("submit", crearCategoria);
-const url = `http://localhost:9091/categorias/add`;
-async function crearCategoria(e) {
-  e.preventDefault(e);
-
-  const nombre = document.querySelector("#nombre").value;
-  const imagen = document.querySelector("#imagen").value;
-  const descripcion = document.querySelector("#descripcion").value;
+async function renderingPruebas() {
+      const prueba = await getPruebas(myCase);
+      const pruebas = document.querySelector("#prueba");
+      let html = "";
   
-  const categoria = {
-    nombre,
-    imagen,
-    descripcion
-  };
-  /* llamamos a la funcion metodo HTTP POST */
-  nuevaCategoria(categoria);
-}
-const nuevaCategoria = async (categoria) => {
-  try {
-  
-    await fetch(url, {
-      method: "POST",
-      body: JSON.stringify(categoria), // data puede ser string o un objeto
-      headers: {
-        "Content-Type": "application/json", // Y le decimos que los datos se enviaran como JSON
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
-  window.location.href = "index.html";
-};
+      prueba.forEach((juzgadoJuez) => {
+        const { nombre_caso , foto_prueba, descripcion, veracidad } = juzgadoJuez;
+        html += `
+        <div class="conatiner col-md-6 main-header">
+        <h1>Prueba: ${nombre_caso}</h1>
+        <img  src="${foto_prueba}" width="350px" alt="Logo" />
+        
+          <h3>Descripcion: 
+          ${descripcion}</h3> 
+          <h3>Veracidad: 
+          ${veracidad}</h3>
+
+      </div>
+          `;
+          pruebas.innerHTML = html;
+      });
+    }
+
+    const formulario = document.querySelector("#formulario");
+
+    formulario.addEventListener("submit", crearPrueba);
+    
+    async function crearPrueba(e) {
+      e.preventDefault(e);
+    
+      const descripcion = document.querySelector("#descripcion").value;
+      const veracidad = document.querySelector("#veracidad").value;
+      const foto_prueba= document.querySelector("#foto_prueba").value;
+      const id_caso = document.querySelector("#caso").value;///
+
+      
+      const prueba = {
+        descripcion,
+        veracidad,
+        foto_prueba,
+        id_caso,
+      };
+      /* llamamos a la funcion metodo HTTP POST */
+      nuevaPrueba(prueba);
+    }
+

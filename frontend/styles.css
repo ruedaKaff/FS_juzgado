@@ -36,7 +36,14 @@ h3 {
   margin: 3rem 0;
   text-align: center;
   font-size: 4.5rem;
-  height: 6rem;
+  height: 3rem;
+}
+.heading-caso{
+  margin: 3rem 0;
+  text-align: center;
+  margin-left: 10rem;
+  font-size: 4.5rem;
+  height: 3rem;
 }
 
 .container {
@@ -50,7 +57,7 @@ h3 {
 }
 .categorias-first{
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 

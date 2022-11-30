@@ -17,7 +17,7 @@ export const getJueces = async ()=>{
 
         const resultado = await fetch(url+"/juez");
         const jueces = await resultado.json();
-        console.log(jueces);
+       // console.log(jueces);
         return jueces;
 
     }catch (error) {
@@ -30,7 +30,7 @@ export const getSospechosos = async ()=>{
 
         const resultado = await fetch(url+"/acusado");
         const sospechosos = await resultado.json();
-        console.log(sospechosos);
+        //console.log(sospechosos);
         return sospechosos;
 
     }catch (error) {
@@ -42,17 +42,17 @@ export const getJuzgados = async ()=>{
 
         const resultado = await fetch(url+"/juzgado");
         const juzgados = await resultado.json();
-        console.log(juzgados);
+       // console.log(juzgados);
         return juzgados;
 
     }catch (error) {
         console.log(error);
     }
 };
-export const getPruebas = async ()=>{
+export const getPruebas = async (myCase)=>{
     try{
 
-        const resultado = await fetch(url+"/prueba");
+        const resultado = await fetch(`${url}/prueba/${2}`);
         const Pruebas = await resultado.json();
         console.log(Pruebas);
         return Pruebas;
@@ -60,4 +60,20 @@ export const getPruebas = async ()=>{
     }catch (error) {
         console.log(error);
     }
+};
+
+export const nuevaPrueba = async (prueba) => {
+    try {
+        console.log(prueba);
+        await fetch("http://localhost:4000/prueba",{
+            method: "POST",
+            body: JSON.stringify(prueba), // data puede ser string o un objeto
+            headers: {
+              "Content-Type": "application/json", // Y le decimos que los datos se enviaran como JSON
+            },
+          });
+        } catch (error) {
+          console.log(error);
+        }
+        window.location.href = "index.html";
 };
